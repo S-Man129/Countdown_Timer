@@ -5,5 +5,3 @@ SpinDown Countdown App
 HTML
 Tailwind CSS
 Vanilla JavaScript
-
-_Still in process_
