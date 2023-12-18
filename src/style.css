@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer{
+    html{
+        font-family: 'Inter', sans-serif;
+    }
+}
+
+:root {
+    --dark-blue: #051821;
+    --spin-black: #1A1A1A;
+    --spin-text-black: #292D32;
+    --spin-text-white: #f1f1f1;
+    --spin-orange: #f58800;
+    --spin-yellow: #fbbc24;    
+}
+
+.content-container {
+    width: 80%;
+    margin: auto;
+}
+
+.text-spin-black {
+    color: var(--spin-text-black);
+}
+
+.text-spin-white {
+    color: var(--spin-text-white);
+}
+
+.form-group, .form-group-placeholder {
+    position: relative;
+}
+
+.form-group > label {
+    position: absolute;
+    top: -15px;
+    left: 10px;
+    padding: 0px 5px;
+    background: #fff;    
+}
+
+.form-group > input[type="date"], 
+.form-group > input[type="time"], 
+.form-group > input[type="text"] {
+    background: transparent;
+}
+
+.form-group-placeholder > label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    color: #888;
+    transform: translateY(-50%);
+    background-color: white;
+    padding: 0 5px;
+    cursor: text;
+    transition: top 0.3s, font-size 0.3s, color 0.3s;
+}
+
+.form-group-placeholder > input {
+    box-sizing: border-box;
+}
+
+/* Default styles for all radio buttons */
+.form-group > input[type="radio"] {
+    appearance: none;
+    border: 2px solid transparent;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Customize background colors for each radio button */
+#theme1 { background-color: rgb(107 114 128 / 1); }
+#theme2 { background-color: rgb(34 197 94 / 1 ); }
+#theme3 { background-color: rgb(59 130 246 / 1); }
+#theme4 { background-color: rgb(249 115 22 / 1); }
+#theme5 { background-color: rgb(168 85 247 / 1); }
+
+.form-group input[type="radio"]:checked {
+    border: 2px solid var(--spin-text-black);
+}
+
+.form-group input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: inherit;
+}
+  
+
+.overlapping-input:focus + .overlapping-label,
+.overlapping-input:not(:placeholder-shown) + .overlapping-label {
+    top: 0px;
+    color: #555;
+}
+
+/* Modal */
+#add-countdown-form-modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.7);
+    background-color: #fff;
+}
+
+/* The Close Button */
+.close, .close-sidebar {
+    color: #bbb;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+  
+.close:hover, .close-sidebar:hover
+.close:focus, .close-sidebar:focus {
+    color: #555;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.socialmedia {
+    display: none;
+}
+
+.sidebar-expanded {
+    display: block;
+    width: 208px;
+}
+
+.fa-check {
+    display: none;
+}
+
+@media only screen and (min-width: 1440px) {
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }  
+    
+    .count-card {
+        width: 24%;
+        max-width: 24%;
+    }
+}
+
+@media only screen and (max-width: 1440px) {
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }  
+    
+    .count-card {
+        max-width: 32%;
+        width: 32%;
+    }
+}
+
+@media only screen and (max-width: 1350px) {
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }
+    
+    .count-card {
+        max-width: 32%;
+        width: 32%;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }
+    
+    .count-card {
+        width: 48%;
+        max-width: 48%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }
+    
+    .count-card {
+        width: 46%;
+        max-width: 46%;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }
+    
+    .count-card {
+        width: 44.5%;
+        max-width: 44.5%;
+    }
+}

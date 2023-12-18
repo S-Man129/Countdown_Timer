@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <link rel="icon" type="image/svg" sizes="32x32" href="">
+    <link rel="stylesheet" href="./src/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous"/>
+</head>
+<body class="bg-gray-50">
+    
+    <nav class="bg-white shadow-md w-full fixed box-border z-10">
+        <div class="content-container flex justify-between items-center h-20">
+            <div class="logo-container flex items-center gap-2">
+                <!-- hamburger button hidden for now -->
+                <button id="hamburgerBtn" class="md:hidden border p-1.5 rounded-md">
+                    <span class="block w-5 h-0.5 bg-gray-800"></span>
+                    <span class="block w-5 h-0.5 bg-gray-800 mt-1"></span>
+                    <span class="block w-5 h-0.5 bg-gray-800 mt-1"></span>
+                </button>
+        
+                <h1 class="logo-text text-3xl font-bold text-spin-black italic">
+                    <span class="spin">Spin</span><span class="down">Down</span> 
+                </h1>
+            </div>
+          
+            <div class="dark-mode flex gap-2 items-center border rounded-lg py-2.5 px-4">
+                <i class="fa-regular fa-moon fa-beat-fade"></i>
+                <div class="relative inline-block w-10 align-middle select-none transition duration-200 ease-in transform">
+                    <input type="checkbox" id="toggle" name="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
+                    <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+            </div>
+            
+        </div>    
+    </nav>
+
+    <!-- Side bar to be hidden for now -->
+    <div class="sidebar hidden transition h-full bg-gray-50 z-20 top-0 border-r px-1 overflow-y-auto fixed">
+        <div class="logo-container flex items-center gap-2 h-20">
+            <!-- hamburger button hidden for now -->
+            <button class="close-sidebar sm:hidden">&times;</button>
+    
+            <h1 class="logo-text text-3xl font-bold text-spin-black italic">
+                <span class="spin">Spin</span><span class="down">Down</span> 
+            </h1>
+        </div>
+        <div class="general my-5">
+            <h2 class="text-2xl font-bold text-gray-700">General</h2>
+            <ul class="divide-y divide-slate-100 mt-3 text-gray-700">
+                <li>
+                    <a href="#" class="px-3 py-2 inline-block w-full hover:text-gray-100 hover:bg-gray-500"> <i class="fa fa-plus"></i> Add countdown</a> 
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-2 inline-block w-full hover:text-gray-100 hover:bg-gray-500"> <i class="fa fa-share-nodes"></i> Invite friends</a> 
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-2 inline-block w-full hover:text-gray-100 hover:bg-gray-500"> <i class="fa-solid fa-question"></i> FAQ</a> 
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-2 inline-block w-full hover:text-gray-100 hover:bg-gray-500"> <i class="fa fa-tools"></i> Settings</a> 
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- main page -->
+    <div class="main-content relative content-container flex md:flex-row sm:flex-col top-20 z-0">
+        <button class="create-count-button2 sm:hidden bg-white drop-shadow-lg border w-auto h-auto p-5 rounded-full fixed bottom-10 right-5 text-3xl flex items-center justify-center hover:bg-slate-100"> <i class="fa-solid fa-plus"></i> </button>
+        
+        <!-- add countdown section -->
+        <div class="add-countdown-form lg:w-1/4 md:w-2/5 sm:w-full max-sm:hidden max-md:border-none md:border-r h-full mt-8 overflow-y-auto relative">
+            
+            <h2 class="font-semibold text-center text-2xl">Add Countdown</h2>
+            <form action="" class="mt-10 px-5 w-auto flex flex-col gap-5">
+                <button class="close sm:hidden absolute top-10 right-3">&times;</button>
+
+                <div class="form-group sm:hidden">
+                    <label for="preview-countdown">Preview Countdown</label>
+                    
+                    <div class="preview-countdown sm:hidden w-full h-20 border border-gray-500 rounded-md">
+                        <!-- to be displayed on small screen -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input class="w-full px-1.5 py-3 border rounded-md" type="date" id="fieldDate">
+                </div>
+                <div class="form-group">
+                    <label for="date">Time</label>
+                    <input class="w-full px-1.5 py-3 border rounded-md" type="time" id="fieldTime">
+                </div>
+                <div class="form-group-placeholder">
+                    <input class="w-full px-1.5 py-3 border rounded-md overlapping-input" type="text" placeholder=" " id="fieldTitle">
+                    <label for="overlappingInput" class="overlapping-label">What is on that day?</label>
+                </div>
+                <div class="form-group-placeholder">
+                    <input class="w-full px-1.5 py-3 border rounded-md overlapping-input" type="text" placeholder=" " id="fieldDescription">
+                    <label for="overlappingInput" class="overlapping-label">Your note</label>
+                </div>
+                <div class="form-group">
+                    <label for="count-for">Count for</label>
+                    <select class="w-full px-1.5 py-3 rounded-md" id="fieldCountfor">
+                        <option value="">Hours, Min, Secs</option>
+                        <option value="">Days</option>
+                        <option value="">Months</option>
+                        <option value="">Year</option>
+                    </select>
+                </div>
+
+                <div class="form-group w-full border border-gray-500 rounded-md">
+                    <label for="themeSelect">Select Theme</label>
+                    <div id="themeSelect" class="p-5 justify-center flex flex-wrap gap-3" id="fieldTheme">
+                        <div class="relative w-12 h-12 p-5 rounded-full cursor-pointer theme" id="theme1" onclick="selectTheme('rgb(107 114 128 / 1)', 'theme1')">
+                            <i class="fa-solid fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                        </div>
+                        <div class="relative w-12 h-12 p-5 rounded-full cursor-pointer theme" id="theme2" onclick="selectTheme('rgb(34 197 94 / 1 )', 'theme2')">
+                            <i class="fa-solid fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                        </div>
+                        <div class="relative w-12 h-12 p-5 rounded-full cursor-pointer theme" id="theme3" onclick="selectTheme('rgb(59 130 246 / 1)', 'theme3')">
+                            <i class="fa-solid fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                        </div>
+                        <div class="relative w-12 h-12 p-5 rounded-full cursor-pointer theme" id="theme4" onclick="selectTheme('rgb(249 115 22 / 1)', 'theme4')">
+                            <i class="fa-solid fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                        </div>
+                        <div class="relative w-12 h-12 p-5 rounded-full cursor-pointer theme" id="theme5" onclick="selectTheme('rgb(168 85 247 / 1)', 'theme5')">
+                            <i class="fa-solid fa-check absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" id="save-count-button" class="p-3 bg-gray-900 text-white text-lg rounded-md text-center hover:opacity-90">Save</button>
+
+            </form>
+        </div>
+
+        <!-- display countdown section -->
+        <div class="countdown-display lg:w-3/4 md:w-3/5 sm:w-full mt-8">
+            <h1 class="text-3xl font-bold text-center text-spin-black">Countdown</h1>
+            
+            <div class="socialmedia shadow-xl p-5 bg-gray-200 rounded-md absolute z-30 top-1/4 left-1/2">
+                <p class="font-semibold text-spin-black text-lg">Share Countdown</p>
+                <div class="socialmedia-icons w-auto p-5 border rounded-md border-black flex gap-5 text-spin-black">
+                    <a href="#" class="p-2.5 hover:border hover:border-gray-300 rounded-md"><i class="fa-brands fa-x-twitter fa-xl"></i></a>
+                    <a href="#" class="p-2.5 hover:border hover:border-gray-300 rounded-md"><i class="fa-brands fa-linkedin fa-xl"></i></a>
+                    <a href="#" class="p-2.5 hover:border hover:border-gray-300 rounded-md"><i class="fa-brands fa-facebook-f fa-xl"></i></a>
+                    <a href="#" class="p-2.5 hover:border hover:border-gray-300 rounded-md"><i class="fa-brands fa-instagram fa-xl"></i></a>
+                    <a href="#" class="p-2.5 hover:border hover:border-gray-300 rounded-md"><i class="fa-brands fa-whatsapp fa-xl"></i></a>
+                </div>
+            </div>
+
+            <div class="countdown-display-container flex flex-row gap-3 max-sm:gap-2 mx-5 mt-10 box-border flex-wrap w-full overflow-y-auto">
+                
+                <!-- <div class="count-card bg-gray-300 p-5 rounded-lg flex flex-col">
+                    <div class="flex justify-between items-center">
+                        <h3 class="count-title text-lg sm:text-xl font-medium">My Birthday</h3>
+                        <div class="relative">
+                            <button id="threeDotBtn" class="p-1.5">
+                                <span class="block w-1 h-1 rounded-full bg-gray-800"></span>
+                                <span class="block w-1 h-1 rounded-full bg-gray-800 mt-1"></span>
+                                <span class="block w-1 h-1 rounded-full bg-gray-800 mt-1"></span>
+                            </button>
+                            <ul role="list" class="option-menu hidden flex flex-col divide-y divide-slate-200 bg-gray-400 text-white absolute top-0 right-4 rounded-md border text-md">
+                                <li class="option-menu-list">
+                                    <a href="" class="px-3 py-2.5 w-28 flex items-center gap-2 hover:bg-gray-500"> <i class="fa-solid fa-share-nodes"></i> Share</a>
+                                </li>
+                                <li class="option-menu-list">
+                                    <a href="" class="px-3 py-2.5 w-28 flex items-center gap-2 hover:bg-gray-500"> <i class="fa-regular fa-pen-to-square"></i> Edit</a>
+                                </li>
+                                <li class="option-menu-list">
+                                    <a href="" class="px-3 py-2.5 w-28 flex items-center gap-2 hover:bg-gray-500"> <i class="fa-regular fa-circle-xmark"></i> Delete</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                
+                    <div class="count-set-date text-sm sm:text-base">12/12/2023</div>
+                    <div class="count-time-display mt-5 mx-auto flex justify-center item-center bg-white w-28 h-28 sm:h-32 sm:w-32 md:h-40 md:w-40 rounded-full border border-black">
+                        <span onclick="displayCountdownTime()" class="text-xl md:text-3xl font-medium self-center">24:13:28</span>
+                    </div>
+                    <div class="mt-5 countdown-note text-justify text-base">This is my first countdown creation and I am testing how cool it is</div> -->
+            </div>
+            
+        </div>
+    </div>
+       
+    <script src="./src/main.js" type="module"></script>
+</body>
+</html>
