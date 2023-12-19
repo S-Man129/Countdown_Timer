@@ -4,7 +4,7 @@ import { validateForm, getFieldsValue, reset, updateCount } from './util.js'
 const existingCountdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
 const countCard = existingCountdowns;
 
-itemsArray[countId] = formvalues;
+// itemsArray[countId] = formvalues;
 
 document.addEventListener('DOMContentLoaded', function () {
     const countformHead = document.querySelector('.add-countdown-form h2');
