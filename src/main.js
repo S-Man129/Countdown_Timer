@@ -140,20 +140,21 @@ const addCountToContainer = () => {
     }
 }
 
-// function selectTheme(color, themeName) {
-//     // Remove checkmark from previously selected theme
-//     document.querySelectorAll('.fa-check').forEach(mark => mark.style.display = 'none');
+function selectTheme(color, themeName) {
+    // Remove checkmark from previously selected theme
+    document.querySelectorAll('.fa-check').forEach(mark => mark.style.display = 'none');
 
-//     // Apply the selected theme color to your countdown card background
-//     countdownCard.style.backgroundColor = color;
+    // Apply the selected theme color to your countdown card background
+    const themeColor = getThemeClass(countdown.theme);
+    countdownCard.style.backgroundColor = themeColor;
 
-//     // Show checkmark on the selected theme
-//     const checkmark = document.querySelector('#${themeName} .fa-check');
-//     checkmark.style.display = 'block';
+    // Show checkmark on the selected theme
+    const checkmark = document.querySelector('#${themeName} .fa-check');
+    checkmark.style.display = 'block';
 
-//     // Log the selected theme
-//     console.log('Selected Theme:', themeName);
-// }
+    // Log the selected theme
+    console.log('Selected Theme:', themeName);
+}
 
 const createCountdownCard = (countdown) => {
     const countdownCard = document.createElement('div');
