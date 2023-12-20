@@ -49,7 +49,7 @@ const generateUniqueId = () => {
 }
 
 const reset = () => {
-    countId = null;
+    // countId = null;
     countTitleInput.value = '';
     countDateInput.value = '';
     countTimeInput.value = '';
