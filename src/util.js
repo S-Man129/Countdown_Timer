@@ -49,7 +49,7 @@ const generateUniqueId = () => {
 }
 
 const reset = () => {
-    // countId = null;
+    countId = null;
     countTitleInput.value = '';
     countDateInput.value = '';
     countTimeInput.value = '';
@@ -72,4 +72,4 @@ function updateCount(count) {
     
 }
 
-export { validateForm, getFieldsValue, reset, updateCount };
+export { validateForm, getFieldsValue, reset, updateCount, generateUniqueId };

@@ -1,4 +1,4 @@
-import { validateForm, getFieldsValue, reset, updateCount } from './util.js'
+import { validateForm, getFieldsValue, reset, updateCount, generateUniqueId } from './util.js'
 
 // Retrieve the user's tasks from local storage
 const existingCountdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
