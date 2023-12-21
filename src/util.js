@@ -29,14 +29,14 @@ const validateForm = () => {
 };
 
 const getFieldsValue = () => {
-    const countdownId = generateUniqueId();
+
     const dueDate = countDateInput.value;
     const countName = countTitleInput.value.trim();    
     const dueTime = countTimeInput.value;
     const description = countDescriptionInput.value;
     const countFor = countPeriodSelect.value;
     const themeSelect = document.querySelector('.theme:checked');
-    const themeValue = themeSelect ? themeSelect.value : "defaultTheme"; // Assuming "default" is your default theme
+    const themeValue = themeSelect ? themeSelect.value : "#ccc"; // Assuming "default" is your default theme
 
 
     return {
@@ -47,6 +47,8 @@ const getFieldsValue = () => {
 const generateUniqueId = () => {
     return '_' + Math.random().toString(36).substring(2, 9);
 }
+
+const countdownId = generateUniqueId();
 
 const reset = () => {
     

@@ -47,7 +47,7 @@
 .form-group > input[type="date"], 
 .form-group > input[type="time"], 
 .form-group > input[type="text"] {
-    background: transparent;
+    background-color: #fff;
 }
 
 .form-group-placeholder > label {
@@ -66,37 +66,13 @@
     box-sizing: border-box;
 }
 
-/* Default styles for all radio buttons */
-.form-group > input[type="radio"] {
-    appearance: none;
-    border: 2px solid transparent;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-}
-
 /* Customize background colors for each radio button */
-#theme1 { background-color: rgb(107 114 128 / 1); }
-#theme2 { background-color: rgb(34 197 94 / 1 ); }
-#theme3 { background-color: rgb(59 130 246 / 1); }
-#theme4 { background-color: rgb(249 115 22 / 1); }
-#theme5 { background-color: rgb(168 85 247 / 1); }
-
-.form-group input[type="radio"]:checked {
-    border: 2px solid var(--spin-text-black);
-}
-
-.form-group input[type="radio"]:checked::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 50%;
-  background: inherit;
-}
-  
+#theme1 { background-color: #6b7280; }
+#theme2 { background-color: #22c55e; }
+#theme3 { background-color: #3b82f6; }
+#theme4 { background-color: #f97316; }
+#theme5 { background-color: #a855f7; }
+#theme6 { background-color: #ff4d4f; }  
 
 .overlapping-input:focus + .overlapping-label,
 .overlapping-input:not(:placeholder-shown) + .overlapping-label {
@@ -215,7 +191,19 @@
     }
     
     .count-card {
-        width: 49%;
-        max-width: 49%;
+        width: 48%;
+        max-width: 48%;
+    }
+}
+
+@media only screen and (max-width: 360px) {    
+    .content-container {
+        width: 94%;
+        margin: auto;
+    }
+    
+    .count-card {
+        width: 97%;
+        max-width: 97%;
     }
 }

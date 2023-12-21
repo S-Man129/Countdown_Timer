@@ -101,11 +101,11 @@ function handleSave(itemType) {
     const formHead = document.querySelector('.add-countdown-form h2');
     const itemsArray = itemType === 'countdowns' ? existingCountdowns : [];
 
-    if (!formValues.theme){
-        formValues.theme = '#ccc';
-    }
+    // if (!formValues.theme){
+    //     formValues.theme = '#ccc';
+    // }
 
-    if (currentPosition === -1) {
+    if (currentPosition == -1) {
         // If currentPosition is -1, it means we are creating a new countdown
         itemsArray.push(formValues);
     } else {
@@ -138,23 +138,7 @@ const addCountToContainer = () => {
         const countCardDisplay = createCountdownCard(count);
         countCardContainer.appendChild(countCardDisplay);
     }
-}
-
-function selectTheme(color, themeName) {
-    // Remove checkmark from previously selected theme
-    document.querySelectorAll('.fa-check').forEach(mark => mark.style.display = 'none');
-
-    // Apply the selected theme color to your countdown card background
-    const themeColor = getThemeClass(countdown.theme);
-    countdownCard.style.backgroundColor = themeColor;
-
-    // Show checkmark on the selected theme
-    const checkmark = document.querySelector('#${themeName} .fa-check');
-    checkmark.style.display = 'block';
-
-    // Log the selected theme
-    console.log('Selected Theme:', themeName);
-}
+};
 
 const createCountdownCard = (countdown) => {
     const countdownCard = document.createElement('div');
@@ -237,7 +221,7 @@ const createCountdownCard = (countdown) => {
         const confirmDelete = confirm('Are you sire you want to delete this countdown');
 
         if (confirmDelete){
-            const updatedCountdowns = existingCountdowns.filter((count) => count.dueDate !== countdown.dueDate);
+            const updatedCountdowns = existingCountdowns.filter((count) => count.countName !== countdown.countName);
             localStorage.setItem('countdowns', JSON.stringify(updatedCountdowns));
         }
     });
@@ -314,18 +298,36 @@ function updateLocalStorage() {
     localStorage.setItem('countdowns', JSON.stringify(existingCountdowns));
 }
 
+const twitterLink = document.querySelector('.twitter-link').addEventListener('click', function() {
+
+})
+const linkedinLink = document.querySelector('.linkedin-link').addEventListener('click', function() {
+    
+});
+const facebookLink = document.querySelector('.facebook-link').addEventListener('click', function() {
+    
+});
+const instagramLink = document.querySelector('.instagram-link').addEventListener('click', function() {
+    
+});
+const whatsappLink = document.querySelector('.whatsapp-link').addEventListener('click', function() {
+    
+});
+
 function getThemeClass(themeValue) {
     switch (themeValue) {
       case "theme1":
-        return "bg-gray-500"; // Replace with the actual class for theme1
+        return "#6b7280"; // Replace with the actual class for theme1
       case "theme2":
-        return "bg-green-500"; // Replace with the actual class for theme2
+        return "#22c55e"; // Replace with the actual class for theme2
       case "theme3":
-        return "bg-blue-500"; // Replace with the actual class for theme3
+        return "#3b82f6"; // Replace with the actual class for theme3
       case "theme4":
-        return "bg-orange-500"; // Replace with the actual class for theme4
+        return "#f97316"; // Replace with the actual class for theme4
       case "theme5":
-        return "bg-purple-500"; // Replace with the actual class for theme5
+        return "#a855f7"; // Replace with the actual class for theme5
+      case "theme6":
+        return "#ff4d4f"
       default:
         return "#fff"; // Default class if no theme is specified
     }
