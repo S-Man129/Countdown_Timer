@@ -35,20 +35,15 @@ const getFieldsValue = () => {
     const dueTime = countTimeInput.value;
     const description = countDescriptionInput.value;
     const countFor = countPeriodSelect.value;
-    const themeSelect = document.querySelector('.theme:checked');
-    const themeValue = themeSelect ? themeSelect.value : "#ccc"; // Assuming "default" is your default theme
+
+    // Assuming "default" is your default theme
+    const theme = document.querySelector('.theme.active').dataset.theme || 'default';
 
 
     return {
-        id: countdownId, countName, dueDate, dueTime, countFor, description, themeValue
+        countName, dueDate, dueTime, countFor, description, theme
     }
 };
-
-const generateUniqueId = () => {
-    return '_' + Math.random().toString(36).substring(2, 9);
-}
-
-const countdownId = generateUniqueId();
 
 const reset = () => {
     
@@ -74,4 +69,4 @@ function updateCount(count) {
     
 }
 
-export { validateForm, getFieldsValue, reset, updateCount, generateUniqueId };
+export { validateForm, getFieldsValue, reset, updateCount };

@@ -1,8 +1,7 @@
-import { validateForm, getFieldsValue, reset, updateCount, generateUniqueId } from './util.js'
+import { validateForm, getFieldsValue, reset, updateCount } from './util.js'
 
 // Retrieve the user's tasks from local storage
-const existingCountdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
-const countCard = existingCountdowns;
+let countdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
 
 // itemsArray[countId] = formvalues;
 
@@ -75,6 +74,34 @@ document.addEventListener('DOMContentLoaded', function () {
         addCountdownForm.style.display = 'none';
     }
 
+    const themeDivs = document.querySelectorAll('.theme');
+
+    // Add click event listener to each theme div
+    themeDivs.forEach(themeDiv => {
+        themeDiv.addEventListener('click', function () {
+            // Remove the checkmark from all theme divs
+            console.log('Clicked on themeDiv:', themeDiv.dataset.theme);
+            themeDivs.forEach(div => {
+                const checkmark = div.querySelector('.fa-check');
+                if (checkmark) {
+                    checkmark.style.display = 'none';
+                }
+                themeDiv.classList.remove('active'); // Remove 'active' class from all themes
+            });
+
+            // Display the checkmark on the clicked theme div
+            const checkmark = themeDiv.querySelector('.fa-check');
+            if (checkmark) {
+                checkmark.style.display = 'block';
+            }
+            themeDiv.classList.add('active'); // Add 'active' class to the clicked theme
+
+            // const themeValue = themeDiv.dataset.theme;
+            // saveThemeColor(countdowns[currentPosition], themeValue);
+
+        });
+    });
+
     addCountToContainer();
 });
 
@@ -83,10 +110,6 @@ let currentPosition = -1;
 const addCountBtn = document.querySelector('#save-count-button');
 
 addCountBtn.addEventListener('click', function () {
-    handleSave('countdowns');
-});
-
-function handleSave(itemType) {
     const isValidated = validateForm();
 
     if (!isValidated) {
@@ -99,61 +122,56 @@ function handleSave(itemType) {
     reset();
 
     const formHead = document.querySelector('.add-countdown-form h2');
-    const itemsArray = itemType === 'countdowns' ? existingCountdowns : [];
 
-    // if (!formValues.theme){
-    //     formValues.theme = '#ccc';
-    // }
+    if (!Array.isArray(countdowns)) {
+        countdowns = []; // Initialize countdowns as an array if it's not
+    }
 
-    if (currentPosition == -1) {
+    if (currentPosition === -1) {
         // If currentPosition is -1, it means we are creating a new countdown
-        itemsArray.push(formValues);
+        countdowns.push(formValues);
     } else {
         // If currentPosition is set, it means we are updating an existing countdown
-        itemsArray[currentPosition] = formValues;
+        countdowns[currentPosition] = formValues;
         currentPosition = -1; // Reset currentPosition after updating
         formHead.innerText = 'Add Countdown';
         addCountBtn.innerText = 'Save';
     }
 
-    updateLocalStorage(itemType);
-
-    // Call the appropriate function to add the item to the container
-    if (itemType === 'countdowns') {
-        addCountToContainer();
-    }
-}
-
+    updateLocalStorage(countdowns);
+    addCountToContainer(countdowns);
+});
 
 const addCountToContainer = () => {
     const countCardContainer = document.querySelector('.countdown-display-container');
     countCardContainer.innerHTML = '';
-    
-    for (const countId in existingCountdowns){
-        const count = existingCountdowns[countId];
 
-        if (!count.theme){
-            count.theme = 'defaultTheme';
-        }
-        const countCardDisplay = createCountdownCard(count);
+    for (let itemPosition = 0; itemPosition < countdowns.length; itemPosition++) {
+        const count = countdowns[itemPosition];
+        const themeDiv = document.querySelector(`#theme${count.theme}`);
+        const themeColor = themeDiv ? getThemeColor(themeDiv.dataset.theme) : '#fff';
+
+        const countCardDisplay = createCountdownCard(countdowns[itemPosition], itemPosition, themeColor);
         countCardContainer.appendChild(countCardDisplay);
     }
 };
 
-const createCountdownCard = (countdown) => {
+
+const createCountdownCard = (countdown, index) => {
     const countdownCard = document.createElement('div');
     countdownCard.setAttribute('class', 'count-card border p-5 rounded-lg flex flex-col');
 
-    const themeColor = getThemeClass(countdown.theme);
+    // Find the theme div with the 'active' class
+    const activeThemeDiv = document.querySelector('.theme.active');
+    const themeColor = activeThemeDiv ? getComputedStyle(activeThemeDiv).backgroundColor : '#fff';
 
-    if (themeColor) {
-        countdownCard.style.backgroundColor = themeColor;
-        console.log('Selected theme:', countdown.theme);
-    } else {
-        console.error('Invalid theme:', countdown.theme);
-        countdownCard.style.backgroundColor = '#ccc';
-    }
-    // countdownCard.style.backgroundColor = getThemeClass(countdown.themeSelect);
+    countdownCard.style.backgroundColor = themeColor;
+
+    // console.log('Theme Color:', themeColor); // Log the theme color
+
+    // Save the theme color for the current countdown
+    // saveThemeColor(index, theme);
+
 
     const countCardHead = document.createElement('div');
     countCardHead.setAttribute('class', 'flex justify-between items-center');
@@ -189,9 +207,10 @@ const createCountdownCard = (countdown) => {
     shareCount.innerHTML = `<i class="fa-solid fa-share-nodes"></i> Share`;
     shareCount.addEventListener('click', function () {
         const socialMedia = document.querySelector('.socialmedia');
-        // socialMedia.style.display = 'block';
-        // Call the share function with countdown data
-        // shareCountdown(countdown);
+        socialMedia.style.display = socialMedia.style.display == 'none' ? 'block' : 'none';
+
+        // Call the share function with countdown data when the Share button is clicked
+        shareCountdown(countdown);
     });
 
     optionMenuShare.appendChild(shareCount);
@@ -205,7 +224,8 @@ const createCountdownCard = (countdown) => {
     editCount.setAttribute('class', 'px-3 py-2.5 w-36 flex items-center gap-2 hover:bg-gray-500')
     editCount.innerHTML = `<i class="fa-regular fa-pen-to-square"></i> Edit`;
     editCount.addEventListener('click', function() {
-        updateCount(countdown);
+        updateCount(countdowns[index]);
+        currentPosition = index;
     });
     optionMenuEdit.appendChild(editCount);
 
@@ -221,8 +241,9 @@ const createCountdownCard = (countdown) => {
         const confirmDelete = confirm('Are you sire you want to delete this countdown');
 
         if (confirmDelete){
-            const updatedCountdowns = existingCountdowns.filter((count) => count.countName !== countdown.countName);
-            localStorage.setItem('countdowns', JSON.stringify(updatedCountdowns));
+            countdowns.splice(index,1);
+            updateLocalStorage(countdowns);
+            addCountToContainer(countdowns);
         }
     });
     optionMenuDelete.appendChild(deleteCount);
@@ -256,31 +277,64 @@ const createCountdownCard = (countdown) => {
     
     const countdownTimeDisplay = document.createElement('span');
     countdownTimeDisplay.setAttribute('class', 'text-xl md:text-2xl font-medium self-center text-center');
-    
+
+    let countdownType = 'hms';
+    const countdownTypeSelector = document.getElementById('fieldCountfor');
+    countdownTypeSelector.addEventListener('change', function () {
+        countdownType = this.value; // Update countdownType based on the selected option
+    });
+
     const intervalId = setInterval(() => {
-        const now = new Date().getTime();
-        const targetDate = new Date(`${countdown.dueDate} ${countdown.dueTime}`).getTime();
-        const timeRemaining = targetDate - now;
+    const now = new Date().getTime();
+    const targetDate = new Date(`${countdown.dueDate} ${countdown.dueTime}`).getTime();
+    const timeRemaining = targetDate - now;
 
-        if (timeRemaining <= 0) {
-            clearInterval(intervalId);
-            countdownTimeDisplay.textContent = 'Countdown expired';
+        if (timeRemaining > 0) {
+            const countdownTimeDisplay = document.createElement('span');
+            countdownTimeDisplay.setAttribute('class', 'text-xl md:text-2xl font-medium self-center text-center');
+            
+            let countdownText;
+
+            switch (countdownType) {
+                case 'hms':
+                    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                    countdownText = `${hours}hr ${minutes}min ${seconds}sec`;
+                    break;
+                case 'days':
+                    const days = (timeRemaining / (1000 * 60 * 60 * 24)).toFixed(1);
+                    countdownText = `${days} days`;
+                    break;
+                case 'months':
+                    const months = (timeRemaining / (1000 * 60 * 60 * 24 * 30)).toFixed(1);
+                    countdownText = months < 1 ? `${months.replace(/^0/, '.')} months` : `${Math.floor(months)} months`;
+                    countdownText = `${months} months`;
+                    break;
+                case 'years':
+                    const years = (timeRemaining / (1000 * 60 * 60 * 24 * 365)).toFixed(1);
+                    countdownText = years < 1 ? `${years.replace(/^0/, '.')} years` : `${Math.floor(years)} years`;
+                    countdownText = `${years} years`;
+                    break;
+                default:
+                    countdownText = 'Invalid countdown type';
+            }
+
+            countdownTimeDisplay.textContent = countdownText;
+            countTimeDisplayContainer.innerHTML = ''; // Clear previous content
+            countTimeDisplayContainer.appendChild(countdownTimeDisplay);
         } else {
-            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            clearInterval(intervalId);
 
-            const formattedDays = days < 10 ? days.toFixed(1).replace(/^0/, '.') : days;
-            const formattedHours = hours < 10 ? '0' + hours : hours;
-            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-            const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+            const expiredText = document.createElement('span');
+            expiredText.setAttribute('class', 'text-xl md:text-2xl font-medium self-center text-center text-red-500');
+            expiredText.textContent = 'Countdown expired';
 
-            const formattedTime = `${formattedDays} days ${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
-
-            countdownTimeDisplay.textContent = formattedTime;
+            countTimeDisplayContainer.innerHTML = ''; // Clear previous content
+            countTimeDisplayContainer.appendChild(expiredText);
         }
     }, 1000);
+
 
     countTimeDisplayContainer.appendChild(countdownTimeDisplay);
     countdownCard.appendChild(countTimeDisplayContainer);
@@ -294,42 +348,158 @@ const createCountdownCard = (countdown) => {
     return countdownCard;
 }  
 
-function updateLocalStorage() {
-    localStorage.setItem('countdowns', JSON.stringify(existingCountdowns));
+function updateLocalStorage(countdowns) {
+    localStorage.setItem('countdowns', JSON.stringify(countdowns));
 }
 
-const twitterLink = document.querySelector('.twitter-link').addEventListener('click', function() {
+// const shareOnTwitter = (text) => {
+//     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+//     openShareWindow(twitterUrl);
+// };
 
-})
-const linkedinLink = document.querySelector('.linkedin-link').addEventListener('click', function() {
-    
-});
-const facebookLink = document.querySelector('.facebook-link').addEventListener('click', function() {
-    
-});
-const instagramLink = document.querySelector('.instagram-link').addEventListener('click', function() {
-    
-});
-const whatsappLink = document.querySelector('.whatsapp-link').addEventListener('click', function() {
-    
-});
+// const shareOnLinkedIn = (text) => {
+//     const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(text)}`;
+//     openShareWindow(linkedInUrl);
+// };
 
-function getThemeClass(themeValue) {
-    switch (themeValue) {
-      case "theme1":
-        return "#6b7280"; // Replace with the actual class for theme1
-      case "theme2":
-        return "#22c55e"; // Replace with the actual class for theme2
-      case "theme3":
-        return "#3b82f6"; // Replace with the actual class for theme3
-      case "theme4":
-        return "#f97316"; // Replace with the actual class for theme4
-      case "theme5":
-        return "#a855f7"; // Replace with the actual class for theme5
-      case "theme6":
-        return "#ff4d4f"
-      default:
-        return "#fff"; // Default class if no theme is specified
+// const shareOnFacebook = (text) => {
+//     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
+//     openShareWindow(facebookUrl);
+// };
+
+// const shareOnInstagram = (text) => {
+//     // Instagram sharing involves mobile apps and is more complex
+//     // You might need to use Instagram API or open the Instagram app with the shared text
+//     alert('Instagram sharing not implemented');
+// };
+
+// const shareOnWhatsApp = (text) => {
+//     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+//     openShareWindow(whatsappUrl);
+// };
+
+// const openShareWindow = (url) => {
+//     // Open a new window or redirect to the provided URL
+//     window.open(url, '_blank');
+// };
+
+const shareCountdown = (countdown) => {
+    const socialMedia = document.querySelector('.socialmedia');
+    socialMedia.style.display = socialMedia.style.display == 'none' ? 'block' : 'none';
+
+    // Modify your event listeners for social media links
+    const twitterLink = document.querySelector('.twitter-link');
+    twitterLink.addEventListener('click', function () {
+        shareOnTwitter(countdown);
+    });
+
+    const linkedinLink = document.querySelector('.linkedin-link');
+    linkedinLink.addEventListener('click', function () {
+        shareOnLinkedIn(countdown);
+    });
+
+    const facebookLink = document.querySelector('.facebook-link');
+    facebookLink.addEventListener('click', function () {
+        shareOnFacebook(countdown);
+    });
+
+    const instagramLink = document.querySelector('.instagram-link');
+    instagramLink.addEventListener('click', function () {
+        alert('Please manually share the link on Instagram.');
+    });
+
+    const whatsappLink = document.querySelector('.whatsapp-link');
+    whatsappLink.addEventListener('click', function () {
+        shareOnWhatsApp(countdown);
+    });
+};
+
+const shareOnTwitter = (countdown) => {
+    const timeRemaining = getTimeRemaining(countdown);
+    const text = encodeURIComponent(`Check out my countdown: ${countdown.countName} - ${timeRemaining}`);
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
+    window.open(twitterUrl, '_blank');
+};
+
+const shareOnLinkedIn = (countdown) => {
+    const linkedInUrl = `https://www.linkedin.com/shareArticle?url=${getCountdownLink(countdown)}`;
+    window.open(linkedInUrl, '_blank');
+};
+
+const shareOnFacebook = (countdown) => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${getCountdownLink(countdown)}`;
+    window.open(facebookUrl, '_blank');
+};
+
+const shareOnWhatsApp = (countdown) => {
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out my countdown: ${getCountdownLink(countdown)}`)}`;
+    window.open(whatsappUrl, '_blank');
+};
+
+const getCountdownLink = (countdown) => {
+    // Extract the necessary information from the countdown object
+    const countdownName = countdown.countName;
+    const countdownTimeRemaining = calculateTimeRemaining(countdown);
+
+    // Construct the link with the countdown name and time remaining
+    const link = `https://spindown.com/share?name=${encodeURIComponent(countdownName)}&time=${encodeURIComponent(countdownTimeRemaining)}`;
+
+    return link;
+};
+
+const calculateTimeRemaining = (countdown) => {
+    const now = new Date().getTime();
+    const targetDate = new Date(`${countdown.dueDate} ${countdown.dueTime}`).getTime();
+    const timeRemaining = targetDate - now;
+
+    if (timeRemaining > 0) {
+        // Calculate hours, minutes, and seconds
+        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        // Create a human-readable time remaining string
+        return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+    } else {
+        return 'Countdown expired';
     }
 };
 
+
+
+// Modify your event listeners for social media links
+// const twitterLink = document.querySelector('.twitter-link').addEventListener('click', function () {
+//     // Replace 'yourText' and 'yourHashtags' with the actual text and hashtags you want to share
+//     // const text = encodeURIComponent(`Check out my countdown: ${getCountdownLink(yourCountdownData)} #yourHashtags`);
+//     // const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
+//     // window.open(twitterUrl, '_blank');
+// });
+
+// const linkedinLink = document.querySelector('.linkedin-link').addEventListener('click', function () {
+//     // const linkedinUrl = `https://www.linkedin.com/shareArticle?url=${getCountdownLink(yourCountdownData)}`;
+//     // window.open(linkedinUrl, '_blank');
+// });
+
+// const facebookLink = document.querySelector('.facebook-link').addEventListener('click', function () {
+//     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${getCountdownLink(yourCountdownData)}`;
+//     window.open(facebookUrl, '_blank');
+// });
+
+// const instagramLink = document.querySelector('.instagram-link').addEventListener('click', function () {
+//     // Instagram does not support sharing links programmatically due to security restrictions
+//     // You can show a message to the user to manually share the link on Instagram
+//     alert('Please manually share the link on Instagram.');
+// });
+
+// const whatsappLink = document.querySelector('.whatsapp-link').addEventListener('click', function () {
+//     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out my countdown: ${getCountdownLink(yourCountdownData)}`)}`;
+//     window.open(whatsappUrl, '_blank');
+// });
+
+
+// const shareOnTwitter = (countdown) => {
+//     const timeRemaining = getTimeRemaining(countdown);
+//     const text = encodeURIComponent(`Check out my countdown: ${countdown.countName} - ${timeRemaining}`);
+//     const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
+//     window.open(twitterUrl, '_blank');
+// };
